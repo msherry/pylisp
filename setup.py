@@ -47,4 +47,3 @@ setup(
     tests_require=tests_require,
     test_suite='py.test',
 )
-g
