@@ -2,6 +2,11 @@
 
 from __future__ import unicode_literals
 
+import readline
+
+readline.parse_and_bind('tab: complete')
+readline.parse_and_bind('set editing-mode emacs')
+
 RED = '\x1b[31m{}\x1b[0m'
 GREEN = '\x1b[32m{}\x1b[0m'
 
