@@ -28,15 +28,51 @@ def red(s):
 def green(s):
     return GREEN.format(s)
 
-def tokenize(chars):
-    return chars.replace('(', ' ( ').replace(')', ' ) ').split()
-
 def get_function(func):
     # TODO: support for environments
     return FUNCTIONS.get(func)
 
+
+class Symbol(object):
+    def __init__(self, v):
+        self.value = v
+
+def atom(x):
+    try:
+        return int(x)
+    except ValueError:
+        try:
+            return float(x)
+        except ValueError:
+            return Symbol(x)
+
+def tokenize(chars):
+    return chars.replace('(', ' ( ').replace(')', ' ) ').split()
+
+def parse(expr):
+    return read_from_tokens(tokenize(expr))
+
+def read_from_tokens(tokens):
+    if not tokens:
+        raise SyntaxError('No input')
+    t = tokens.pop(0)
+    if t == '(':
+        L = []
+        while tokens[0] != ')':
+            L.append(read_from_tokens(tokens))
+        # Pop off final ')'
+        tokens.pop(0)
+        return L
+    elif t == ')':
+        raise SyntaxError('Unexpected ")"')
+    else:
+         return atom(t)
+
+
 def l_eval(expr):
-    tokens = tokenize(expr)
+    parsed = parse(expr)
+
+
     for i, tok in enumerate(tokens):
         if tok == '(':
             func = get_function(tokens[i + 1])
@@ -45,6 +81,7 @@ def l_eval(expr):
                 pass
         elif tok == ')':
             pass
+
 
 def read_loop():
     try:

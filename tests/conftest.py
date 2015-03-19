@@ -8,3 +8,7 @@ def addition_sexp():
 @pytest.fixture
 def subtraction_sexp():
     return '(- 3 2)'
+
+@pytest.fixture
+def factorial_sexp():
+    return '(- 3 2)'
