@@ -1,0 +1,7 @@
+*.pyc
+*.pyo
+
+*_flymake.py
+*.egg-info/
+.DS_Store
+nosetests.xml
