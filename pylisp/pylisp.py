@@ -5,14 +5,14 @@ from __future__ import unicode_literals
 import operator
 import readline
 
+from utils import red, green
+
+
 # TODO: http://pymotw.com/2/readline/
 # Use readline for completing function names
 readline.parse_and_bind('tab: complete')
 readline.parse_and_bind('set editing-mode emacs')
 
-
-RED = '\x1b[31m{}\x1b[0m'
-GREEN = '\x1b[32m{}\x1b[0m'
 
 FUNCTIONS = {
     '+': operator.add,
@@ -22,16 +22,19 @@ FUNCTIONS = {
     '^': operator.pow,
 }
 
-def red(s):
-    return RED.format(s)
+class Environment(dict):
+    def __init__(self, dikt, parent=None):
+        self.parent = parent
+        self.update(dikt)
 
-def green(s):
-    return GREEN.format(s)
+    def lookup(self, s):
+        if s in self:
+            return self[s]
+        if self.parent:
+            return self.parent.lookup(s)
+        raise ValueError(s)
 
-def get_function(func):
-    # TODO: support for environments
-    return FUNCTIONS.get(func)
-
+global_env = Environment(FUNCTIONS, parent=None)
 
 class Symbol(object):
     def __init__(self, v):
@@ -69,18 +72,12 @@ def read_from_tokens(tokens):
          return atom(t)
 
 
-def l_eval(expr):
-    parsed = parse(expr)
-
-
-    for i, tok in enumerate(tokens):
-        if tok == '(':
-            func = get_function(tokens[i + 1])
-            if func:
-
-                pass
-        elif tok == ')':
-            pass
+def l_eval(expr, env=global_env):
+    if isinstance(expr, Symbol):
+        return env.lookup(expr.value)
+    elif isinstance(expr, list):
+        func = env.lookup(expr[0].value)
+        return func(*expr[1:])
 
 
 def read_loop():
@@ -96,7 +93,11 @@ def read_loop():
             break
         if not expr:
             continue
-        ret = l_eval(expr)
+        try:
+            ret = l_eval(parse(expr), global_env)
+        except ValueError, e:
+            print '"{}" not found in environment'.format(expr)
+            continue
         print green('[{}]'.format(count)) + ' {}'.format(ret)
         print
         count += 1

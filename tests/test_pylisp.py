@@ -27,10 +27,10 @@ class TestParse(object):
 
 class TestEval(object):
     def test_eval_addition(self, addition_sexp):
-        assert l_eval(addition_sexp) == 5
+        assert l_eval(parse(addition_sexp)) == 5
 
     def test_eval_subtraction(self, subtraction_sexp):
-        assert l_eval(subtraction_sexp) == 1
+        assert l_eval(parse(subtraction_sexp)) == 1
 
     def test_factorial(self, factorial_sexp):
-        assert l_eval(factorial_sexp) == 720
+        assert l_eval(parse(factorial_sexp)) == 720
