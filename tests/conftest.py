@@ -11,7 +11,7 @@ def subtraction_sexp():
 
 @pytest.fixture
 def factorial_sexp():
-    return '(- 3 2)'
+    return '(define fact (lambda (x) (cond (<= x 2) x (* x (fact (- x 1))))))'
 
 @pytest.fixture
 def true_sexp():

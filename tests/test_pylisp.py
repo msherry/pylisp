@@ -53,4 +53,6 @@ class TestEval(object):
         assert l_eval(parse('(poop 8 7)')) == 56
 
     def test_factorial(self, factorial_sexp):
-        assert l_eval(parse(factorial_sexp)) == 720
+        # Define fact
+        l_eval(parse(factorial_sexp))
+        assert l_eval(parse('(fact 6)')) == 720

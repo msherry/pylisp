@@ -97,6 +97,14 @@ def l_eval(expr, env=global_env):
         val = l_eval(expr[2], env)
         env[sym.value] = val
         return sym
+    elif expr[0] == 'cond':
+        try:
+            _, cond, true_expr, false_expr = expr
+        except ValueError:
+            _, cond, true_expr = expr
+            false_expr = 'None'
+        return (l_eval(true_expr, env) if l_eval(cond, env)
+                else l_eval(false_expr, env))
     elif expr[0] in ['quote', "'"]:
         return expr[1]
     else:
