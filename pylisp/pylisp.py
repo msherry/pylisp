@@ -66,7 +66,12 @@ def parse(expr):
 def read_from_tokens(tokens, level=0):
     if not tokens:
         raise SyntaxError('No input')
+    ret = None
     t = tokens.pop(0)
+    quote = False
+    if t == "'":
+        quote = True
+        t = tokens.pop(0)
     if t == '(':
         L = []
         while tokens[0] != ')':
@@ -76,11 +81,15 @@ def read_from_tokens(tokens, level=0):
         if level == 0 and tokens:
             raise SyntaxError('Unexpected data after parse: {}'.format(
                 ' '.join(tokens)))
-        return L
+        ret = L
     elif t == ')':
         raise SyntaxError('Unexpected ")"')
     else:
-        return atom(t)
+        ret = atom(t)
+
+    if quote:
+        ret = ['quote', ret]
+    return ret
 
 
 def l_eval(expr, env=global_env):
@@ -121,7 +130,7 @@ def l_eval(expr, env=global_env):
             i += 1
         # No conditions matched
         return None
-    elif expr[0] in ['quote', "'"]:
+    elif expr[0] == 'quote':
         return expr[1]
     else:
         proc = l_eval(expr[0], env)
