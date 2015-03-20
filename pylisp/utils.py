@@ -18,3 +18,16 @@ class Colors(object):
     @staticmethod
     def blue(s):
         return BLUE.format(s)
+
+
+def parens_balanced(lines):
+    text = ' '.join(lines)
+    count = 0
+    for c in text:
+        if c == '(':
+            count += 1
+        elif c == ')':
+            count -= 1
+            if count < 0:
+                raise SyntaxError('Unexpected ")"')
+    return count == 0

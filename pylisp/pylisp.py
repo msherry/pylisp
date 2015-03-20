@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import readline
 
 from environments import Environment, global_env
-from utils import Colors
+from utils import Colors, parens_balanced
 
 
 # TODO: http://pymotw.com/2/readline/
@@ -125,21 +125,33 @@ def read_loop():
     except IOError:
         pass
     count = 1
+    complete_expr = []
     while True:
+        prompt = ((Colors.red('[{}]'.format(count)) + ' > ') if not
+                  complete_expr else '... ')
         try:
-            expr = raw_input(Colors.red('[{}]'.format(count)) + ' > ')
+            expr = raw_input(prompt)
         except EOFError:
             break
         if not expr:
             continue
-        try:
-            ret = l_eval(parse(expr), global_env)
-        except Exception, e:
-            print 'Error: {}'.format(e)
+        # Complete sexp, or multi-line entry?
+        complete_expr.append(expr)
+        if parens_balanced(complete_expr):
+            # Complete sexp, try to eval
+            try:
+                expr = ' '.join(complete_expr)
+                complete_expr = []
+                ret = l_eval(parse(expr), global_env)
+            except Exception, e:
+                print 'Error: {}'.format(e)
+                continue
+            print Colors.green('[{}]'.format(count)) + ' {}'.format(ret)
+            print
+            count += 1
+        else:
+            # Incomplete sexp, still building
             continue
-        print Colors.green('[{}]'.format(count)) + ' {}'.format(ret)
-        print
-        count += 1
     print
     readline.write_history_file('.pylisp_history')
 
