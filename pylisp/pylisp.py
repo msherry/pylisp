@@ -51,14 +51,17 @@ def atom(x):
         except ValueError:
             return Symbol(x)
 
+
 def tokenize(chars):
     special = "()'"
     for s in special:
         chars = chars.replace(s, " {} ".format(s))
     return chars.split()
 
+
 def parse(expr):
     return read_from_tokens(tokenize(expr))
+
 
 def read_from_tokens(tokens, level=0):
     if not tokens:
@@ -67,7 +70,7 @@ def read_from_tokens(tokens, level=0):
     if t == '(':
         L = []
         while tokens[0] != ')':
-            L.append(read_from_tokens(tokens, level=level+1))
+            L.append(read_from_tokens(tokens, level=level + 1))
         # Pop off final ')'
         tokens.pop(0)
         if level == 0 and tokens:
@@ -78,6 +81,7 @@ def read_from_tokens(tokens, level=0):
         raise SyntaxError('Unexpected ")"')
     else:
         return atom(t)
+
 
 def l_eval(expr, env=global_env):
     if isinstance(expr, Symbol):
@@ -129,7 +133,7 @@ def read_loop():
     indent = 0
     while True:
         prompt = ((Colors.red('[{}]'.format(count)) + ' > ') if not
-                  complete_expr else '...   ' + ' ' * indent)
+                  complete_expr else '...   ' + '  ' * indent)
         try:
             expr = raw_input(prompt)
         except EOFError:
