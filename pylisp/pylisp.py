@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import readline
 
 from environments import Environment, global_env
-from procedures import Procedure
 from utils import Colors
 
 
@@ -13,6 +12,23 @@ from utils import Colors
 # Use readline for completing function names
 readline.parse_and_bind('tab: complete')
 readline.parse_and_bind('set editing-mode emacs')
+
+
+class Procedure(object):
+
+    # TODO: can't move this into its own file where it has to import pylisp, or
+    # the `isinstance(expr, Symbol)` test fails -- __main__.Symbol !=
+    # pylisp.Symbol
+
+    def __init__(self, arglist, body, parent_env):
+        self.arglist = arglist
+        self.body = body
+        self.env = Environment(parent=parent_env)
+
+    def __call__(self, *args):
+        for arg, val in zip(self.arglist, args):
+            self.env[arg.value] = val
+        return l_eval(self.body, env=self.env)
 
 
 class Symbol(object):
@@ -63,7 +79,6 @@ def read_from_tokens(tokens):
 
 def l_eval(expr, env=global_env):
     if isinstance(expr, Symbol):
-        value = expr.value
         _, val = env.lookup(expr.value)
         return val
     elif not isinstance(expr, list):
@@ -71,7 +86,7 @@ def l_eval(expr, env=global_env):
     elif expr[0] == 'lambda':
         arglist = expr[1]
         body = expr[2]
-        return Procedure(arglist, body)
+        return Procedure(arglist, body, env)
     elif expr[0] == 'apply':
         # TODO:
         proc = l_eval(expr[1], env)

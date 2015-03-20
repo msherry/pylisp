@@ -1,6 +1,6 @@
 import pytest
 
-from pylisp import tokenize, parse, l_eval, Symbol
+from pylisp import tokenize, parse, l_eval, Symbol, Procedure
 
 
 class TestTokenize(object):
@@ -41,6 +41,16 @@ class TestEval(object):
 
     def test_eval_false(self, false_sexp):
         assert l_eval(parse(false_sexp)) == None   # Not False
+
+    def test_lambda(self):
+        fn = l_eval(parse('(lambda (x y) (* x y))'))
+        assert type(fn) is Procedure
+
+    def test_define(self):
+        fn = l_eval(parse('(define poop (lambda (x y) (* x y)))'))
+        assert type(fn) is Symbol
+        assert fn.value == 'poop'
+        assert l_eval(parse('(poop 8 7)')) == 56
 
     def test_factorial(self, factorial_sexp):
         assert l_eval(parse(factorial_sexp)) == 720
