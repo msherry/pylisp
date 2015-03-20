@@ -115,10 +115,10 @@ def l_eval(expr, env=global_env):
         # TOOD: probably not compliant
         i = 1
         while i < len(expr):
-            cond, result = expr[i], expr[i + 1]
+            cond, result = expr[i]
             if l_eval(cond, env):
                 return l_eval(result, env)
-            i += 2
+            i += 1
         # No conditions matched
         return None
     elif expr[0] in ['quote', "'"]:

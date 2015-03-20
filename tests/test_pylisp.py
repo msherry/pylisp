@@ -59,9 +59,9 @@ class TestEval(object):
 
     def test_cond(self):
         sexp = '''(define condfun (lambda (x)
-                    (cond (< x 10) (* x 7)
-                          (> x 10) (/ x 7)
-                          True 7)))
+                    (cond ((< x 10) (* x 7))
+                          ((> x 10) (/ x 7))
+                          (True 7))))
         '''
         l_eval(parse(sexp))
         assert l_eval(parse('(condfun 2)')) == 14
