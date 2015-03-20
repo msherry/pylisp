@@ -111,6 +111,16 @@ def l_eval(expr, env=global_env):
             false_expr = 'None'
         return (l_eval(true_expr, env) if l_eval(cond, env)
                 else l_eval(false_expr, env))
+    elif expr[0] == 'cond':
+        # TOOD: probably not compliant
+        i = 1
+        while i < len(expr):
+            cond, result = expr[i], expr[i + 1]
+            if l_eval(cond, env):
+                return l_eval(result, env)
+            i += 2
+        # No conditions matched
+        return None
     elif expr[0] in ['quote', "'"]:
         return expr[1]
     else:
