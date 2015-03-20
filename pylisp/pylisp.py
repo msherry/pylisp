@@ -110,7 +110,11 @@ def l_eval(expr, env=global_env):
     else:
         proc = l_eval(expr[0], env)
         args = [l_eval(arg, env) for arg in expr[1:]]
-        return proc(*args)
+        ret = proc(*args)
+        if ret == False:
+            # Lisp!
+            ret = None
+        return ret
 
 
 def read_loop():
