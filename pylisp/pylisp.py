@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import readline
 
 from environment import Environment, global_env
-from utils import red, green
+from utils import Colors
 
 
 # TODO: http://pymotw.com/2/readline/
@@ -17,6 +17,9 @@ readline.parse_and_bind('set editing-mode emacs')
 class Symbol(object):
     def __init__(self, v):
         self.value = v
+
+    def __repr__(self):
+        return Colors.blue(self.value)
 
     def __eq__(self, v):
         return self.value == v
@@ -32,7 +35,10 @@ def atom(x):
             return Symbol(x)
 
 def tokenize(chars):
-    return chars.replace('(', ' ( ').replace(')', ' ) ').split()
+    special = "()'"
+    for s in special:
+        chars = chars.replace(s, " {} ".format(s))
+    return chars.split()
 
 def parse(expr):
     return read_from_tokens(tokenize(expr))
@@ -50,6 +56,7 @@ def read_from_tokens(tokens):
         return L
     elif t == ')':
         raise SyntaxError('Unexpected ")"')
+
     else:
          return atom(t)
 
@@ -66,6 +73,13 @@ def l_eval(expr, env=global_env):
         proc = l_eval(expr[1], env)
         args = [l_eval(arg, env) for arg in expr[2:]]
         return [proc(arg) for arg in args]
+    elif expr[0] == 'define':
+        sym = expr[1]
+        val = l_eval(expr[2], env)
+        env[sym.value] = val
+        return sym
+    elif expr[0] in ['quote', "'"]:
+        return expr[1]
     else:
         proc = l_eval(expr[0], env)
         args = [l_eval(arg, env) for arg in expr[1:]]
@@ -80,7 +94,7 @@ def read_loop():
     count = 1
     while True:
         try:
-            expr = raw_input(red('[{}]'.format(count)) + ' > ')
+            expr = raw_input(Colors.red('[{}]'.format(count)) + ' > ')
         except EOFError:
             break
         if not expr:
@@ -90,7 +104,7 @@ def read_loop():
         except Exception, e:
             print 'Error: {}'.format(e)
             continue
-        print green('[{}]'.format(count)) + ' {}'.format(ret)
+        print Colors.green('[{}]'.format(count)) + ' {}'.format(ret)
         print
         count += 1
     print

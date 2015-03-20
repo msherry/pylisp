@@ -24,6 +24,10 @@ class TestParse(object):
         assert isinstance(parsed[0], Symbol)
         assert parsed[0].value == '-'
 
+    def test_parse_too_many_close(self):
+        with pytest.raises(SyntaxError):
+            parse('())')
+
 
 class TestEval(object):
     def test_eval_addition(self, addition_sexp):

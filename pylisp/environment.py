@@ -16,13 +16,13 @@ class Environment(dict):
             return self[s]
         if self.parent:
             return self.parent.lookup(s)
-        raise ValueError('{} not found'.format(s))
+        raise ValueError('Symbol "{}" not found'.format(s))
 
 
 def std_environment():
     env = Environment()
     env.update({
-        '+': op.add,
+        '+': lambda *x: sum(x),
         '-': op.sub,
         '*': op.mul,
         '/': op.div,
@@ -33,7 +33,7 @@ def std_environment():
         '=': op.eq,
         '^': op.pow,
         '%': op.mod,
-        'list': lambda *args: tuple(list(args)),
+        'list': lambda *args: list(args),
     })
     env.update(vars(math))
     return env
