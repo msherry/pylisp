@@ -97,7 +97,7 @@ def l_eval(expr, env=global_env):
         val = l_eval(expr[2], env)
         env[sym.value] = val
         return sym
-    elif expr[0] == 'cond':
+    elif expr[0] == 'if':
         try:
             _, cond, true_expr, false_expr = expr
         except ValueError:
