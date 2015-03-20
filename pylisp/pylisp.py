@@ -18,6 +18,10 @@ class Symbol(object):
     def __init__(self, v):
         self.value = v
 
+    def __eq__(self, v):
+        return self.value == v
+
+
 def atom(x):
     try:
         return int(x)
@@ -51,12 +55,21 @@ def read_from_tokens(tokens):
 
 def l_eval(expr, env=global_env):
     if isinstance(expr, Symbol):
+        value = expr.value
         return env.lookup(expr.value)
     elif not isinstance(expr, list):
         return expr
+    elif expr[0] == 'lambda':
+        pass
+    elif expr[0] == 'apply':
+        # TODO:
+        proc = l_eval(expr[1], env)
+        args = [l_eval(arg, env) for arg in expr[2:]]
+        return [proc(arg) for arg in args]
     else:
-        func = env.lookup(expr[0].value)
-        return func(*expr[1:])
+        proc = l_eval(expr[0], env)
+        args = [l_eval(arg, env) for arg in expr[1:]]
+        return proc(*args)
 
 
 def read_loop():

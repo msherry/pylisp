@@ -33,6 +33,7 @@ def std_environment():
         '=': op.eq,
         '^': op.pow,
         '%': op.mod,
+        'list': lambda *args: tuple(list(args)),
     })
     env.update(vars(math))
     return env
