@@ -52,7 +52,9 @@ def read_from_tokens(tokens):
 def l_eval(expr, env=global_env):
     if isinstance(expr, Symbol):
         return env.lookup(expr.value)
-    elif isinstance(expr, list):
+    elif not isinstance(expr, list):
+        return expr
+    else:
         func = env.lookup(expr[0].value)
         return func(*expr[1:])
 
@@ -72,8 +74,8 @@ def read_loop():
             continue
         try:
             ret = l_eval(parse(expr), global_env)
-        except ValueError, e:
-            print '"{}" not found in environment'.format(expr)
+        except Exception, e:
+            print 'Error: {}'.format(e)
             continue
         print green('[{}]'.format(count)) + ' {}'.format(ret)
         print

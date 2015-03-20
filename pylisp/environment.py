@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
-import operator
+import math
+import operator as op
 
 
 class Environment(dict):
@@ -15,18 +16,25 @@ class Environment(dict):
             return self[s]
         if self.parent:
             return self.parent.lookup(s)
-        raise ValueError(s)
+        raise ValueError('{} not found'.format(s))
 
 
 def std_environment():
     env = Environment()
     env.update({
-        '+': operator.add,
-        '-': operator.sub,
-        '*': operator.mul,
-        '/': operator.div,
-        '^': operator.pow,
+        '+': op.add,
+        '-': op.sub,
+        '*': op.mul,
+        '/': op.div,
+        '>': op.gt,
+        '<': op.lt,
+        '>=': op.ge,
+        '<=': op.le,
+        '=': op.eq,
+        '^': op.pow,
+        '%': op.mod,
     })
+    env.update(vars(math))
     return env
 
 global_env = std_environment()
