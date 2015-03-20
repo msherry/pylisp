@@ -36,5 +36,11 @@ class TestEval(object):
     def test_eval_subtraction(self, subtraction_sexp):
         assert l_eval(parse(subtraction_sexp)) == 1
 
+    def test_eval_true(self, true_sexp):
+        assert l_eval(parse(true_sexp)) == True
+
+    def test_eval_false(self, false_sexp):
+        assert l_eval(parse(false_sexp)) == None   # Not False
+
     def test_factorial(self, factorial_sexp):
         assert l_eval(parse(factorial_sexp)) == 720

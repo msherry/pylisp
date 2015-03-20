@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 
 import readline
 
-from environment import Environment, global_env
+from environments import Environment, global_env
+from procedures import Procedure
 from utils import Colors
 
 
@@ -63,11 +64,14 @@ def read_from_tokens(tokens):
 def l_eval(expr, env=global_env):
     if isinstance(expr, Symbol):
         value = expr.value
-        return env.lookup(expr.value)
+        _, val = env.lookup(expr.value)
+        return val
     elif not isinstance(expr, list):
         return expr
     elif expr[0] == 'lambda':
-        pass
+        arglist = expr[1]
+        body = expr[2]
+        return Procedure(arglist, body)
     elif expr[0] == 'apply':
         # TODO:
         proc = l_eval(expr[1], env)

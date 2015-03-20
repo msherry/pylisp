@@ -13,7 +13,7 @@ class Environment(dict):
 
     def lookup(self, s):
         if s in self:
-            return self[s]
+            return self, self[s]
         if self.parent:
             return self.parent.lookup(s)
         raise ValueError('Symbol "{}" not found'.format(s))
@@ -34,8 +34,10 @@ def std_environment():
         '^': op.pow,
         '%': op.mod,
         'list': lambda *args: list(args),
+        'True': True,
+        'None': None,
     })
-    env.update(vars(math))
+    # env.update(vars(math))
     return env
 
 global_env = std_environment()
