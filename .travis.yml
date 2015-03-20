@@ -3,8 +3,8 @@ python:
   - 2.7
 
 install:
-  python setup.py develop
-  pip install -e .[tests]
+  - python setup.py develop
+  - pip install -e .[tests]
 
 script:
-  py.test -v
+  - py.test -v
