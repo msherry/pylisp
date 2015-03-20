@@ -2,9 +2,9 @@
 
 from __future__ import unicode_literals
 
-import operator
 import readline
 
+from environment import Environment, global_env
 from utils import red, green
 
 
@@ -13,28 +13,6 @@ from utils import red, green
 readline.parse_and_bind('tab: complete')
 readline.parse_and_bind('set editing-mode emacs')
 
-
-FUNCTIONS = {
-    '+': operator.add,
-    '-': operator.sub,
-    '*': operator.mul,
-    '/': operator.div,
-    '^': operator.pow,
-}
-
-class Environment(dict):
-    def __init__(self, dikt, parent=None):
-        self.parent = parent
-        self.update(dikt)
-
-    def lookup(self, s):
-        if s in self:
-            return self[s]
-        if self.parent:
-            return self.parent.lookup(s)
-        raise ValueError(s)
-
-global_env = Environment(FUNCTIONS, parent=None)
 
 class Symbol(object):
     def __init__(self, v):
@@ -70,7 +48,6 @@ def read_from_tokens(tokens):
         raise SyntaxError('Unexpected ")"')
     else:
          return atom(t)
-
 
 def l_eval(expr, env=global_env):
     if isinstance(expr, Symbol):
