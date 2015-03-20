@@ -30,4 +30,4 @@ def parens_balanced(lines):
             count -= 1
             if count < 0:
                 raise SyntaxError('Unexpected ")"')
-    return count == 0
+    return count == 0, count

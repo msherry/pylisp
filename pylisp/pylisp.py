@@ -126,9 +126,10 @@ def read_loop():
         pass
     count = 1
     complete_expr = []
+    indent = 0
     while True:
         prompt = ((Colors.red('[{}]'.format(count)) + ' > ') if not
-                  complete_expr else '... ')
+                  complete_expr else '...   ' + ' ' * indent)
         try:
             expr = raw_input(prompt)
         except EOFError:
@@ -137,7 +138,8 @@ def read_loop():
             continue
         # Complete sexp, or multi-line entry?
         complete_expr.append(expr)
-        if parens_balanced(complete_expr):
+        balanced, indent = parens_balanced(complete_expr)
+        if balanced:
             # Complete sexp, try to eval
             try:
                 expr = ' '.join(complete_expr)
