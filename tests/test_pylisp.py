@@ -42,6 +42,13 @@ class TestEval(object):
     def test_eval_false(self, false_sexp):
         assert l_eval(parse(false_sexp)) == None   # Not False
 
+    def test_quote(self):
+        ret = l_eval(parse('(quote (x y z))'))
+        assert len(ret) == 3
+        assert all(isinstance(x, Symbol) for x in ret)
+        assert [x.value for x in ret] == ['x', 'y', 'z']
+        assert l_eval(parse("'(x y z)")) == l_eval(parse('(quote (x y z))'))
+
     def test_lambda(self):
         fn = l_eval(parse('(lambda (x y) (* x y))'))
         assert isinstance(fn, Procedure) == True
