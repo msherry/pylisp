@@ -60,22 +60,24 @@ def tokenize(chars):
 def parse(expr):
     return read_from_tokens(tokenize(expr))
 
-def read_from_tokens(tokens):
+def read_from_tokens(tokens, level=0):
     if not tokens:
         raise SyntaxError('No input')
     t = tokens.pop(0)
     if t == '(':
         L = []
         while tokens[0] != ')':
-            L.append(read_from_tokens(tokens))
+            L.append(read_from_tokens(tokens, level=level+1))
         # Pop off final ')'
         tokens.pop(0)
+        if level == 0 and tokens:
+            raise SyntaxError('Unexpected data after parse: {}'.format(
+                ' '.join(tokens)))
         return L
     elif t == ')':
         raise SyntaxError('Unexpected ")"')
-
     else:
-         return atom(t)
+        return atom(t)
 
 def l_eval(expr, env=global_env):
     if isinstance(expr, Symbol):
