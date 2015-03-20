@@ -56,3 +56,16 @@ class TestEval(object):
         # Define fact
         l_eval(parse(factorial_sexp))
         assert l_eval(parse('(fact 6)')) == 720
+
+    def test_cond(self):
+        sexp = '''(define condfun (lambda (x)
+                    (cond (< x 10) (* x 7)
+                          (> x 10) (/ x 7)
+                          True 7)))
+        '''
+        l_eval(parse(sexp))
+        assert l_eval(parse('(condfun 2)')) == 14
+        assert l_eval(parse('(condfun 3)')) == 21
+        assert l_eval(parse('(condfun 14)')) == 2
+        assert l_eval(parse('(condfun 21)')) == 3
+        assert l_eval(parse('(condfun 10)')) == 7
