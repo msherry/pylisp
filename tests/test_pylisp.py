@@ -43,6 +43,7 @@ class TestEval(object):
         assert l_eval(parse(false_sexp)) == None   # Not False
 
     def test_and(self):
+        assert l_eval(parse('(and)')) == True
         assert l_eval(parse('(and True True)')) == True
         assert l_eval(parse('(and True False)')) == None
         assert l_eval(parse('(and False)')) == None
@@ -51,6 +52,7 @@ class TestEval(object):
         assert l_eval(parse("(and 1 2 'c '(f g)")) == l_eval(parse("'(f g)"))
 
     def test_or(self):
+        assert l_eval(parse('(or)')) == False
         assert l_eval(parse('(or True True)')) == True
         assert l_eval(parse('(or True False)')) == True
         assert l_eval(parse('(or False)')) == None
