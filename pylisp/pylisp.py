@@ -137,6 +137,13 @@ def l_eval(expr, env=global_env):
             if result in [None, False]:
                 return None
         return result
+    elif expr[0] == 'or':
+        result = None
+        for exp in expr[1:]:
+            result = l_eval(exp, env)
+            if result not in [None, False]:
+                return result
+        return result
     elif expr[0] == 'quote':
         return expr[1]
     else:
