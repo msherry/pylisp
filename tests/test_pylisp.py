@@ -51,7 +51,12 @@ class TestEval(object):
         assert l_eval(parse("(and 1 2 'c '(f g)")) == l_eval(parse("'(f g)"))
 
     def test_or(self):
-        pass
+        assert l_eval(parse('(or True True)')) == True
+        assert l_eval(parse('(or True False)')) == True
+        assert l_eval(parse('(or False)')) == None
+        assert l_eval(parse('(or (= 2 2) (> 2 1))')) == True
+        assert l_eval(parse('(or (= 2 2) (< 2 1))')) == True
+        assert l_eval(parse("(or 1 2 'c '(f g)")) == 1
 
     def test_quote(self):
         ret = l_eval(parse('(quote (x y z))'))
