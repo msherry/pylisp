@@ -130,6 +130,13 @@ def l_eval(expr, env=global_env):
             i += 1
         # No conditions matched
         return None
+    elif expr[0] == 'and':
+        result = True
+        for exp in expr[1:]:
+            result = l_eval(exp, env)
+            if result in [None, False]:
+                return None
+        return result
     elif expr[0] == 'quote':
         return expr[1]
     else:
