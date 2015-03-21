@@ -51,11 +51,11 @@ class TestEval(object):
 
     def test_lambda(self):
         fn = l_eval(parse('(lambda (x y) (* x y))'))
-        assert isinstance(fn, Procedure) == True
+        assert isinstance(fn, Procedure)
 
     def test_define(self):
         fn = l_eval(parse('(define poop (lambda (x y) (* x y)))'))
-        assert isinstance(fn, Symbol) == True
+        assert isinstance(fn, Symbol)
         assert fn.value == 'poop'
         assert l_eval(parse('(poop 8 7)')) == 56
 
