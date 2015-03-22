@@ -42,6 +42,13 @@ class TestEval(object):
     def test_eval_false(self, false_sexp):
         assert l_eval(parse(false_sexp)) == None   # Not False
 
+    def test_factorial(self, factorial_sexp):
+        # Define fact
+        l_eval(parse(factorial_sexp))
+        assert l_eval(parse('(fact 6)')) == 720
+
+
+class TestBuiltins(object):
     def test_and(self):
         assert l_eval(parse('(and)')) == True
         assert l_eval(parse('(and True True)')) == True
@@ -77,11 +84,6 @@ class TestEval(object):
         assert fn.value == 'poop'
         assert l_eval(parse('(poop 8 7)')) == 56
 
-    def test_factorial(self, factorial_sexp):
-        # Define fact
-        l_eval(parse(factorial_sexp))
-        assert l_eval(parse('(fact 6)')) == 720
-
     def test_cond(self):
         sexp = '''(define condfun (lambda (x)
                     (cond ((< x 10) (* x 7))
@@ -94,3 +96,9 @@ class TestEval(object):
         assert l_eval(parse('(condfun 14)')) == 2
         assert l_eval(parse('(condfun 21)')) == 3
         assert l_eval(parse('(condfun 10)')) == 7
+
+    def test_let(self):
+        l_eval(parse('(define x 10)'))
+        assert (l_eval(parse('x'))) == 10
+        assert l_eval(parse('(let ((x 22)) x)')) == 22
+        assert (l_eval(parse('x'))) == 10
