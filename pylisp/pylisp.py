@@ -144,6 +144,13 @@ def l_eval(expr, env=global_env):
             if result not in [None, False]:
                 return result
         return result
+    elif expr[0] == 'let':
+        let_forms = expr[1]
+        body = expr[2]
+        new_env = Environment(parent=env)
+        for form in let_forms:
+            new_env[form[0].value] = l_eval(form[1], env)
+        return l_eval(body, new_env)
     elif expr[0] == 'quote':
         return expr[1]
     else:
