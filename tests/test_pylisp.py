@@ -102,3 +102,15 @@ class TestBuiltins(object):
         assert (l_eval(parse('x'))) == 10
         assert l_eval(parse('(let ((x 22)) x)')) == 22
         assert (l_eval(parse('x'))) == 10
+
+    def test_closure(self):
+        l_eval(parse('''(define closure_func
+                          (let ((x 10))
+                            (lambda (y) (^ x y))))'''))
+        assert l_eval(parse('(closure_func 1)')) == 10
+        assert l_eval(parse('(closure_func 2)')) == 100
+        # External defines don't affect value of x inside closure
+        l_eval(parse('(define x 20)'))
+        assert l_eval(parse('(closure_func 1)')) == 10
+        assert l_eval(parse('(closure_func 2)')) == 100
+        assert l_eval(parse('x')) == 20
