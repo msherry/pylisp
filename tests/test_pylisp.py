@@ -47,6 +47,16 @@ class TestEval(object):
         l_eval(parse(factorial_sexp))
         assert l_eval(parse('(fact 6)')) == 720
 
+    def test_fibonacci(self, fibonacci_sexp):
+        # Define fact
+        l_eval(parse(fibonacci_sexp))
+        assert l_eval(parse('(fib 0)')) == 0
+        assert l_eval(parse('(fib 1)')) == 1
+        assert l_eval(parse('(fib 2)')) == 1
+        assert l_eval(parse('(fib 3)')) == 2
+        assert l_eval(parse('(fib 4)')) == 3
+        assert l_eval(parse('(fib 5)')) == 5
+
 
 class TestBuiltins(object):
     def test_and(self):
