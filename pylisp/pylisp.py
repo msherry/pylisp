@@ -157,7 +157,7 @@ def l_eval(expr, env=global_env):
         proc = l_eval(expr[0], env)
         args = [l_eval(arg, env) for arg in expr[1:]]
         ret = proc(*args)
-        if ret == False:
+        if ret is False:
             # Lisp!
             ret = None
         return ret
