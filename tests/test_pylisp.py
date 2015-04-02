@@ -48,7 +48,7 @@ class TestEval(object):
         assert l_eval(parse('(fact 6)')) == 720
 
     def test_fibonacci(self, fibonacci_sexp):
-        # Define fact
+        # Define fib
         l_eval(parse(fibonacci_sexp))
         assert l_eval(parse('(fib 0)')) == 0
         assert l_eval(parse('(fib 1)')) == 1
@@ -124,3 +124,13 @@ class TestBuiltins(object):
         assert l_eval(parse('(closure_func 1)')) == 10
         assert l_eval(parse('(closure_func 2)')) == 100
         assert l_eval(parse('x')) == 20
+
+    def test_one_arg_map(self, fibonacci_sexp):
+        l_eval(parse(fibonacci_sexp))
+        assert (l_eval(parse(
+            "(map fib '(0 1 2 3 4 5 6 7 8 9 10))")) ==
+                [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 65])
+
+    def test_two_arg_map(self):
+        assert (l_eval(parse(
+            "(map (lambda (x y) (* x y)) '(1 2 3) '(9 20 7))")) == [9, 40, 21])
