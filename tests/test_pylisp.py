@@ -129,7 +129,7 @@ class TestBuiltins(object):
         l_eval(parse(fibonacci_sexp))
         assert (l_eval(parse(
             "(map fib '(0 1 2 3 4 5 6 7 8 9 10))")) ==
-                [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 65])
+                [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
 
     def test_two_arg_map(self):
         assert (l_eval(parse(

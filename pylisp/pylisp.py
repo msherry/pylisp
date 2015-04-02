@@ -146,6 +146,12 @@ def l_eval(expr, env=global_env):
         for form in let_forms:
             new_env[form[0].value] = l_eval(form[1], env)
         return l_eval(body, new_env)
+    elif expr[0] == 'map':
+        # TODO: probably non-conforming, can we implement this in lisp?
+        proc = l_eval(expr[1], env)
+        args_list = [l_eval(arg, env) for arg in expr[2:]]
+        ret = [proc(*args) for args in zip(*args_list)]
+        return ret
     elif expr[0] == 'quote':
         return expr[1]
     else:
