@@ -174,31 +174,35 @@ def read_loop():
     complete_expr = []
     indent = 0
     while True:
-        prompt = ((Colors.red('[{}]'.format(count)) + ' > ') if not
-                  complete_expr else '...   ' + '  ' * indent)
         try:
-            expr = raw_input(prompt)
-        except EOFError:
-            break
-        if not expr:
-            continue
-        # Complete sexp, or multi-line entry?
-        complete_expr.append(expr)
-        balanced, indent = parens_balanced(complete_expr)
-        if balanced:
-            # Complete sexp, try to eval
+            prompt = ((Colors.red('[{}]'.format(count)) + ' > ') if not
+                      complete_expr else '...   ' + '  ' * indent)
             try:
-                expr = ' '.join(complete_expr)
-                complete_expr = []
-                ret = l_eval(parse(expr), global_env)
-            except Exception, e:                        # pylint: disable=W0703
-                print 'Error: {}'.format(e)
+                expr = raw_input(prompt)
+            except EOFError:
+                break
+            if not expr:
                 continue
-            print Colors.green('[{}]'.format(count)) + ' {}'.format(ret)
-            print
-            count += 1
-        else:
-            # Incomplete sexp, still building
+            # Complete sexp, or multi-line entry?
+            complete_expr.append(expr)
+            balanced, indent = parens_balanced(complete_expr)
+            if balanced:
+                # Complete sexp, try to eval
+                try:
+                    expr = ' '.join(complete_expr)
+                    complete_expr = []
+                    ret = l_eval(parse(expr), global_env)
+                except Exception, e:                    # pylint: disable=W0703
+                    print 'Error: {}'.format(e)
+                    continue
+                print Colors.green('[{}]'.format(count)) + ' {}'.format(ret)
+                print
+                count += 1
+            else:
+                # Incomplete sexp, still building
+                continue
+        except KeyboardInterrupt:
+            print 'KeyboardInterrupt'
             continue
     print
     readline.write_history_file('.pylisp_history')
