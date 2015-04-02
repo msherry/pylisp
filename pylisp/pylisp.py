@@ -23,12 +23,14 @@ class Procedure(object):
     def __init__(self, arglist, body, parent_env):
         self.arglist = arglist
         self.body = body
-        self.env = Environment(parent=parent_env)
+        self.parent_env = parent_env
 
     def __call__(self, *args):
+        env = Environment(parent=self.parent_env)
         for arg, val in zip(self.arglist, args):
-            self.env[arg.value] = val
-        return l_eval(self.body, env=self.env)
+            assert isinstance(arg.value, basestring)
+            env[arg.value] = val
+        return l_eval(self.body, env=env)
 
 
 class Symbol(object):
@@ -189,7 +191,7 @@ def read_loop():
                 expr = ' '.join(complete_expr)
                 complete_expr = []
                 ret = l_eval(parse(expr), global_env)
-            except Exception, e:
+            except Exception, e:                        # pylint: disable=W0703
                 print 'Error: {}'.format(e)
                 continue
             print Colors.green('[{}]'.format(count)) + ' {}'.format(ret)
