@@ -152,6 +152,10 @@ def l_eval(expr, env=global_env):
         args_list = [l_eval(arg, env) for arg in expr[2:]]
         ret = [proc(*args) for args in zip(*args_list)]
         return ret
+    elif expr[0] == 'seq':
+        args = [l_eval(arg, env) for arg in expr[1:]]
+        ret = range(*args)
+        return ret
     elif expr[0] == 'quote':
         return expr[1]
     else:

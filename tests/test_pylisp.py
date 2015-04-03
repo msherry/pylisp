@@ -109,9 +109,13 @@ class TestBuiltins(object):
 
     def test_let(self):
         l_eval(parse('(define x 10)'))
-        assert (l_eval(parse('x'))) == 10
+        assert l_eval(parse('x')) == 10
         assert l_eval(parse('(let ((x 22)) x)')) == 22
-        assert (l_eval(parse('x'))) == 10
+        assert l_eval(parse('x')) == 10
+
+    def test_seq(self):
+        assert l_eval(parse('(seq 10)')) == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        assert l_eval(parse('(seq 5 10)')) == [5, 6, 7, 8, 9]
 
     def test_closure(self):
         l_eval(parse('''(define closure_func
