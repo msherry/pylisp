@@ -108,6 +108,13 @@ def l_eval(expr, env):
         val = l_eval(expr[2], env)
         env[sym.value] = val
         return sym
+    elif expr[0] == 'set':
+        sym = expr[1]
+        if sym.value not in env:
+            raise ValueError('{} not found in environment')
+        val = l_eval(expr[2], env)
+        env[sym.value] = val
+        return sym
     elif expr[0] == 'if':
         try:
             _, cond, true_expr, false_expr = expr
