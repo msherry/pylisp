@@ -16,6 +16,9 @@ class TestTokenize(PylispTestCase):
     def test_tokenize_subtraction(self, subtraction_sexp):
         assert tokenize(subtraction_sexp) == ['(', '-', '3', '2', ')']
 
+    def test_tokenize_fibonacci(self, fibonacci_sexp):
+        assert len(tokenize(fibonacci_sexp)) == 38
+
 
 class TestParse(PylispTestCase):
     def test_parse_addition(self, addition_sexp):
