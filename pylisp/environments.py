@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import math
 import operator as op
 
+global_env = None
 
 std_procedures = {
     'fact': '''(lambda (x)
@@ -55,4 +56,10 @@ def std_environment():
         env[proc_name] = l_eval(parse(proc_code), env)
     return env
 
-global_env = std_environment()
+
+def reset_global_env():
+    global global_env                         # pylint: disable=W0603
+    global_env = std_environment()
+
+
+reset_global_env()

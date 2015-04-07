@@ -1,9 +1,15 @@
 import pytest
 
 from pylisp import tokenize, parse, Symbol, Procedure, global_parse_and_eval
+from pylisp.environments import reset_global_env
 
 
-class TestTokenize(object):
+class PylispTestCase(object):
+    def setup_method(self, _method):
+        reset_global_env()
+
+
+class TestTokenize(PylispTestCase):
     def test_tokenize_addition(self, addition_sexp):
         assert tokenize(addition_sexp) == ['(', '+', '2', '3', ')']
 
@@ -11,7 +17,7 @@ class TestTokenize(object):
         assert tokenize(subtraction_sexp) == ['(', '-', '3', '2', ')']
 
 
-class TestParse(object):
+class TestParse(PylispTestCase):
     def test_parse_addition(self, addition_sexp):
         parsed = parse(addition_sexp)
         assert parsed[1:] == [2, 3]
@@ -29,7 +35,7 @@ class TestParse(object):
             parse('())')
 
 
-class TestEval(object):
+class TestEval(PylispTestCase):
     def test_eval_addition(self, addition_sexp):
         assert global_parse_and_eval(addition_sexp) == 5
 
@@ -47,6 +53,14 @@ class TestEval(object):
         global_parse_and_eval(factorial_sexp)
         assert global_parse_and_eval('(fact 6)') == 720
 
+    def test_env_not_recycled_part_1(self):
+        global_parse_and_eval('(define junk_fun (lambda (x) (* 2 x)))')
+        assert global_parse_and_eval('(junk_fun 4)') == 8
+
+    def test_env_not_recycled_part_2(self):
+        with pytest.raises(Exception):
+            global_parse_and_eval('(junk_fun 4)')
+
     def test_fibonacci(self, fibonacci_sexp):
         # Define fib
         global_parse_and_eval(fibonacci_sexp)
@@ -58,7 +72,13 @@ class TestEval(object):
         assert global_parse_and_eval('(fib 5)') == 5
 
 
-class TestBuiltins(object):
+class TestEnvironments(PylispTestCase):
+    def test_std_procs(self):
+        assert global_parse_and_eval('(fact 6)') == 720
+        assert global_parse_and_eval('(fib 6)') == 8
+
+
+class TestBuiltins(PylispTestCase):
     def test_and(self):
         assert global_parse_and_eval('(and)') == True
         assert global_parse_and_eval('(and True True)') == True
@@ -134,8 +154,7 @@ class TestBuiltins(object):
 
     def test_one_arg_map(self, fibonacci_sexp):
         global_parse_and_eval(fibonacci_sexp)
-        assert (global_parse_and_eval(
-            "(map fib '(0 1 2 3 4 5 6 7 8 9 10))") ==
+        assert (global_parse_and_eval("(map fib '(0 1 2 3 4 5 6 7 8 9 10))") ==
                 [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
 
     def test_two_arg_map(self):
