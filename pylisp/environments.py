@@ -49,6 +49,7 @@ def std_environment():
         'list': lambda *args: list(args),
         'True': True,
         'None': None,
+        'type': type,
     })
     # env.update(vars(math))
 
