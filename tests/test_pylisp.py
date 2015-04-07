@@ -58,7 +58,7 @@ class TestEval(PylispTestCase):
         assert global_parse_and_eval('(junk_fun 4)') == 8
 
     def test_env_not_recycled_part_2(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             global_parse_and_eval('(junk_fun 4)')
 
     def test_fibonacci(self, fibonacci_sexp):
