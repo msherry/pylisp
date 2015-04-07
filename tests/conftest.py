@@ -23,13 +23,15 @@ def false_sexp():
 
 @pytest.fixture
 def factorial_sexp():
-    return '''(define fact (lambda (x)
+    # fact is a default proc, so we define an identical fact2
+    return '''(define fact2 (lambda (x)
                 (if (< x 2) x
                   (* x (fact (- x 1))))))'''
 
 
 @pytest.fixture
 def fibonacci_sexp():
-    return '''(define fib (lambda (x)
+    # fib is a default proc, so we define an identical fib2
+    return '''(define fib2 (lambda (x)
                 (if (< x 2) x
                    (+ (fib (- x 1)) (fib (- x 2))))))'''

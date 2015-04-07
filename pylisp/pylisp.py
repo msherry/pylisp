@@ -103,6 +103,8 @@ def l_eval(expr, env):
         return [proc(arg) for arg in args]
     elif expr[0] == 'define':
         sym = expr[1]
+        if sym.value in env:
+            raise ValueError('{} already defined in environment'.format(sym))
         val = l_eval(expr[2], env)
         env[sym.value] = val
         return sym

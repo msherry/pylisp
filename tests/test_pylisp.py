@@ -51,7 +51,7 @@ class TestEval(PylispTestCase):
     def test_factorial(self, factorial_sexp):
         # Define fact
         global_parse_and_eval(factorial_sexp)
-        assert global_parse_and_eval('(fact 6)') == 720
+        assert global_parse_and_eval('(fact2 6)') == 720
 
     def test_env_not_recycled_part_1(self):
         global_parse_and_eval('(define junk_fun (lambda (x) (* 2 x)))')
@@ -116,6 +116,11 @@ class TestBuiltins(PylispTestCase):
         assert fn.value == 'poop'
         assert global_parse_and_eval('(poop 8 7)') == 56
 
+    def test_define_works_only_once(self):
+        global_parse_and_eval('(define poop (lambda (x y) (* x y)))')
+        with pytest.raises(Exception):
+            global_parse_and_eval('(define poop (lambda (x y) (* x y)))')
+
     def test_cond(self):
         sexp = '''(define condfun (lambda (x)
                     (cond ((< x 10) (* x 7))
@@ -154,8 +159,8 @@ class TestBuiltins(PylispTestCase):
 
     def test_one_arg_map(self, fibonacci_sexp):
         global_parse_and_eval(fibonacci_sexp)
-        assert (global_parse_and_eval("(map fib '(0 1 2 3 4 5 6 7 8 9 10))") ==
-                [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
+        assert (global_parse_and_eval("(map fib2 '(0 1 2 3 4 5 6 7 8 9 10))")
+                == [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
 
     def test_two_arg_map(self):
         assert (global_parse_and_eval(
