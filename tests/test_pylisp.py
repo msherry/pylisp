@@ -67,12 +67,12 @@ class TestEval(PylispTestCase):
     def test_fibonacci(self, fibonacci_sexp):
         # Define fib
         global_parse_and_eval(fibonacci_sexp)
-        assert global_parse_and_eval('(fib 0)') == 0
-        assert global_parse_and_eval('(fib 1)') == 1
-        assert global_parse_and_eval('(fib 2)') == 1
-        assert global_parse_and_eval('(fib 3)') == 2
-        assert global_parse_and_eval('(fib 4)') == 3
-        assert global_parse_and_eval('(fib 5)') == 5
+        assert global_parse_and_eval('(fib2 0)') == 0
+        assert global_parse_and_eval('(fib2 1)') == 1
+        assert global_parse_and_eval('(fib2 2)') == 1
+        assert global_parse_and_eval('(fib2 3)') == 2
+        assert global_parse_and_eval('(fib2 4)') == 3
+        assert global_parse_and_eval('(fib2 5)') == 5
 
 
 class TestEnvironments(PylispTestCase):
