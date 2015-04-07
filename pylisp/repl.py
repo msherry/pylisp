@@ -11,8 +11,14 @@ readline.parse_and_bind('tab: complete')
 readline.parse_and_bind('set editing-mode emacs')
 
 
+def global_parse_and_eval(expr):
+    from environments import global_env
+    from pylisp import l_eval, parse
+
+    return l_eval(parse(expr), global_env)
+
+
 def read_loop():
-    from pylisp import l_eval, parse, global_env
     try:
         readline.read_history_file('.pylisp_history')
     except IOError:
@@ -38,7 +44,7 @@ def read_loop():
                 try:
                     expr = ' '.join(complete_expr)
                     complete_expr = []
-                    ret = l_eval(parse(expr), global_env)
+                    ret = global_parse_and_eval(expr)
                 except Exception, e:                    # pylint: disable=W0703
                     print 'Error: {}'.format(e)
                     continue

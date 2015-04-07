@@ -4,6 +4,16 @@ import math
 import operator as op
 
 
+std_procedures = {
+    'fact': '''(lambda (x)
+                 (if (< x 2) x
+                   (* x (fact (- x 1)))))''',
+    'fib': '''(lambda (x)
+                (if (< x 2) x
+                  (+ (fib (- x 1)) (fib (- x 2)))))''',
+}
+
+
 class Environment(dict):
     def __init__(self, dikt=None, parent=None):
         super(Environment, self).__init__(dikt=None)
@@ -20,6 +30,8 @@ class Environment(dict):
 
 
 def std_environment():
+    from pylisp import l_eval, parse
+
     env = Environment()
     env.update({
         '+': lambda *x: sum(x),
@@ -38,6 +50,9 @@ def std_environment():
         'None': None,
     })
     # env.update(vars(math))
+
+    for proc_name, proc_code in std_procedures.iteritems():
+        env[proc_name] = l_eval(parse(proc_code), env)
     return env
 
 global_env = std_environment()

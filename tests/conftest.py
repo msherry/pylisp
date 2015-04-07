@@ -24,7 +24,7 @@ def false_sexp():
 @pytest.fixture
 def factorial_sexp():
     return '''(define fact (lambda (x)
-                (if (<= x 2) x
+                (if (< x 2) x
                   (* x (fact (- x 1))))))'''
 
 

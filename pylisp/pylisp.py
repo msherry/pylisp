@@ -2,7 +2,6 @@
 
 from __future__ import unicode_literals
 
-from environments import Environment, global_env
 from utils import Colors
 from repl import read_loop
 
@@ -87,7 +86,7 @@ def read_from_tokens(tokens, level=0):
     return ret
 
 
-def l_eval(expr, env=global_env):
+def l_eval(expr, env):
     if isinstance(expr, Symbol):
         _, val = env.lookup(expr.value)
         return val
@@ -170,3 +169,6 @@ def l_eval(expr, env=global_env):
 
 if __name__ == '__main__':
     read_loop()
+
+
+from environments import Environment
