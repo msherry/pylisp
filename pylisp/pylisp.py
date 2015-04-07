@@ -109,9 +109,11 @@ def l_eval(expr, env):
         env[sym.value] = val
         return sym
     elif expr[0] == 'set':
-        sym = expr[1]
+        sym = l_eval(expr[1], env)
+        if not isinstance(sym, Symbol):
+            raise TypeError('{} is not a Symbol'.format(sym))
         if sym.value not in env:
-            raise ValueError('{} not found in environment')
+            raise ValueError('{} not found in environment'.format(sym))
         val = l_eval(expr[2], env)
         env[sym.value] = val
         return sym

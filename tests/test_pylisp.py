@@ -128,10 +128,10 @@ class TestBuiltins(PylispTestCase):
         with pytest.raises(ValueError):
             global_parse_and_eval('x')
         with pytest.raises(ValueError):
-            global_parse_and_eval('(set x 7)')
+            global_parse_and_eval("(set 'x 7)")
         global_parse_and_eval('(define x 7)')
         assert global_parse_and_eval('(= x 7)') == True
-        global_parse_and_eval('(set x 8)')
+        global_parse_and_eval("(set 'x 8)")
         assert global_parse_and_eval('(= x 8)') == True
 
     def test_cond(self):
