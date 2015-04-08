@@ -74,6 +74,12 @@ class TestEval(PylispTestCase):
         assert global_parse_and_eval('(fib2 4)') == 3
         assert global_parse_and_eval('(fib2 5)') == 5
 
+    @pytest.mark.xfail
+    @pytest.mark.timeout(2)
+    def test_fast_fibonacci(self, fibonacci_sexp):
+        global_parse_and_eval(fibonacci_sexp)
+        assert global_parse_and_eval('(fib2 50)') == 0
+
 
 class TestEnvironments(PylispTestCase):
     def test_std_procs(self):

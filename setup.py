@@ -21,6 +21,7 @@ tests_require = [
     # 'mock >= 0.8, < 0.9',
     # 'nose',
     'pytest',
+    'pytest-timeout',
 ]
 
 setup(
