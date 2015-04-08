@@ -47,6 +47,7 @@ def std_environment():
         '^': op.pow,
         '%': op.mod,
         'list': lambda *args: list(args),
+        'make-hash-table': lambda: dict(),              # pylint: disable=W0108
         'True': True,
         'None': None,
         'type': type,
