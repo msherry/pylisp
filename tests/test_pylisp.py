@@ -157,6 +157,7 @@ class TestBuiltins(PylispTestCase):
         global_parse_and_eval('(define x 10)')
         assert global_parse_and_eval('x') == 10
         assert global_parse_and_eval('(let ((x 22)) x)') == 22
+        assert global_parse_and_eval('(let ((x 22) (y 11)) (* x y))') == 242
         assert global_parse_and_eval('x') == 10
 
     def test_seq(self):
