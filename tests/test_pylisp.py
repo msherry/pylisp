@@ -198,13 +198,12 @@ class TestHashTables(PylispTestCase):
     def test_create(self):
         assert global_parse_and_eval('(make-hash-table)') == {}
 
-    @pytest.mark.xfail
     def test_get_nil(self):
         global_parse_and_eval('(define table (make-hash-table))')
-        assert ('(gethash "one" table)') == None
+        assert global_parse_and_eval('(gethash "one" table)') == None
 
     @pytest.mark.xfail
     def test_set(self):
         global_parse_and_eval('(define table (make-hash-table))')
         global_parse_and_eval('(set (gethash "one" table) 8)')
-        assert ('(gethash "one" table)') == 8
+        assert global_parse_and_eval('(gethash "one" table)') == 8

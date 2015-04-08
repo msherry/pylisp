@@ -92,6 +92,9 @@ def l_eval(expr, env):
         return val
     elif not isinstance(expr, list):
         return expr
+    elif expr[0] == 'gethash':
+        key, table = expr[1], l_eval(expr[2], env)
+        return table.get(key)
     elif expr[0] == 'lambda':
         arglist = expr[1]
         body = expr[2]
