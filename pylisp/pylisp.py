@@ -151,7 +151,7 @@ def l_eval(expr, env):
         return result
     elif expr[0] == 'let':
         let_forms = expr[1]
-        body = expr[2]
+        body = expr[2] if len(expr) > 2 else None
         new_env = Environment(parent=env)
         for form in let_forms:
             new_env[form[0].value] = l_eval(form[1], env)
