@@ -191,3 +191,9 @@ class TestBuiltins(PylispTestCase):
     def test_two_arg_map(self):
         assert (global_parse_and_eval(
             "(map (lambda (x y) (* x y)) '(1 2 3) '(9 20 7))") == [9, 40, 21])
+
+
+class TestHashTables(PylispTestCase):
+
+    def test_create(self):
+        assert global_parse_and_eval('(make-hash-table)') == {}

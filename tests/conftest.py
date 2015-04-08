@@ -35,3 +35,11 @@ def fibonacci_sexp():
     return '''(define fib2 (lambda (x)
                 (if (< x 2) x
                    (+ (fib (- x 1)) (fib (- x 2))))))'''
+
+
+def memoize_sexp():
+    return """(defmacro memoize (func)
+                '(lambda (x)
+                  (let (( memo (make-hash-table)))
+                     (if (gethash x 'memo) (gethash x 'memo)
+                       (setf (gethash x 'memo) (func x))))))) """
