@@ -185,8 +185,9 @@ class TestBuiltins(PylispTestCase):
 
     def test_one_arg_map(self, fibonacci_sexp):
         global_parse_and_eval(fibonacci_sexp)
-        assert (global_parse_and_eval("(map fib2 '(0 1 2 3 4 5 6 7 8 9 10))")
-                == [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
+        assert (global_parse_and_eval(
+            "(map fib2 '(0 1 2 3 4 5 6 7 8 9 10))") ==
+            [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
 
     def test_two_arg_map(self):
         assert (global_parse_and_eval(
@@ -205,5 +206,6 @@ class TestHashTables(PylispTestCase):
     @pytest.mark.xfail
     def test_set(self):
         global_parse_and_eval('(define table (make-hash-table))')
+        assert global_parse_and_eval('(gethash "one" table)') == None
         global_parse_and_eval('(set (gethash "one" table) 8)')
         assert global_parse_and_eval('(gethash "one" table)') == 8

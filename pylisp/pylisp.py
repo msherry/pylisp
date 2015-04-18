@@ -36,6 +36,17 @@ class Symbol(object):
         return self.value == v
 
 
+class Place(object):
+    def __init__(self, type_, var, accessor):
+        self.type = type_
+        self.var = var
+        self.accessor = accessor
+
+    def eval(self):
+        if self.type == 'hashtable':
+            return self.var.get(self.accessor)
+
+
 def atom(x):
     try:
         return int(x)
@@ -90,20 +101,19 @@ def l_eval(expr, env):
     if isinstance(expr, Symbol):
         _, val = env.lookup(expr.value)
         return val
+    elif isinstance(expr, Place):
+        return expr.eval()
     elif not isinstance(expr, list):
         return expr
     elif expr[0] == 'gethash':
         key, table = expr[1], l_eval(expr[2], env)
-        return table.get(key)
+        if not isinstance(key, Symbol):
+            key = l_eval(key, env)
+        return Place('hashtable', table, key)
     elif expr[0] == 'lambda':
         arglist = expr[1]
         body = expr[2]
         return Procedure(arglist, body, env)
-    elif expr[0] == 'apply':
-        # TODO:
-        proc = l_eval(expr[1], env)
-        args = [l_eval(arg, env) for arg in expr[2:]]
-        return [proc(arg) for arg in args]
     elif expr[0] == 'define':
         sym = expr[1]
         if sym.value in env:
