@@ -88,11 +88,10 @@ class TestEval(PylispTestCase):
         assert global_parse_and_eval('(fib2 4)') == 3
         assert global_parse_and_eval('(fib2 5)') == 5
 
-    @pytest.mark.xfail
     @pytest.mark.timeout(2)
     def test_memoized_fibonacci(self, memoized_fib_sexp):
         global_parse_and_eval(memoized_fib_sexp)
-        assert global_parse_and_eval('(memo-fib 50)') == 0
+        assert global_parse_and_eval('(memo-fib 50)') == 12586269025
 
 
 class TestEnvironments(PylispTestCase):

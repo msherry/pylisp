@@ -122,7 +122,11 @@ def l_eval(expr, env):
             if place[0] == 'gethash':
                 key, table = place[1], l_eval(place[2], env)
                 if isinstance(key, Symbol):
-                    key = key.value
+                    # HACK: until we have strings, fake it here
+                    if (key.value[0], key.value[-1]) == ('"', '"'):
+                        key = key.value
+                    else:
+                        key = l_eval(key, env)
                 else:
                     key = l_eval(key, env)
                 table[key] = val
@@ -182,9 +186,10 @@ def l_eval(expr, env):
             # exited.
             # TODO: this seems really dirty -- would love to know the right way
             # to do it.
-            value_to_name = {v: k for k, v in ret.parent_env.iteritems()}
-            if ret in value_to_name:
-                name = value_to_name[ret]
+            procedure_to_name = {v: k for k, v in ret.parent_env.iteritems()
+                                 if isinstance(v, Procedure)}
+            if ret in procedure_to_name:
+                name = procedure_to_name[ret]
                 ret.parent_env.pop(name)
                 env[name] = ret
         return ret
