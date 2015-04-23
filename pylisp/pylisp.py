@@ -113,7 +113,7 @@ def l_eval(expr, env):
             raise ValueError('{} already defined in environment'.format(sym))
         val = l_eval(expr[2], env)
         env[sym.value] = val
-        return sym
+        return val
     elif expr[0] == 'set':
         # Apparently the Lisp way is to hack a bunch of special cases in here
         place = expr[1]
@@ -176,6 +176,17 @@ def l_eval(expr, env):
         for form in let_forms:
             new_env[form[0].value] = l_eval(form[1], env)
         ret = l_eval(body, new_env)
+        if isinstance(ret, Procedure):
+            # Pull the procedure out of the env belonging to `let` and place it
+            # in this one, so we can still access it once the let form is
+            # exited.
+            # TODO: this seems really dirty -- would love to know the right way
+            # to do it.
+            value_to_name = {v: k for k, v in ret.parent_env.iteritems()}
+            if ret in value_to_name:
+                name = value_to_name[ret]
+                ret.parent_env.pop(name)
+                env[name] = ret
         return ret
     elif expr[0] == 'map':
         # TODO: probably non-conforming, can we implement this in lisp?
