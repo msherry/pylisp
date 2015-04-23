@@ -134,8 +134,10 @@ class TestBuiltins(PylispTestCase):
 
     def test_define(self):
         fn = global_parse_and_eval('(define poop (lambda (x y) (* x y)))')
-        assert isinstance(fn, Symbol)
-        assert fn.value == 'poop'
+        # TODO: would be nice to be able to print the returned Procedure's name
+        # on the repl like we could when this returned a Symbol
+        assert isinstance(fn, Procedure)
+        # assert fn.value == 'poop'
         assert global_parse_and_eval('(poop 8 7)') == 56
 
     def test_define_works_only_once(self):
