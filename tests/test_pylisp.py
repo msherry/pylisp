@@ -90,9 +90,9 @@ class TestEval(PylispTestCase):
 
     @pytest.mark.xfail
     @pytest.mark.timeout(2)
-    def test_fast_fibonacci(self, fibonacci_sexp):
-        global_parse_and_eval(fibonacci_sexp)
-        assert global_parse_and_eval('(fib2 50)') == 0
+    def test_memoized_fibonacci(self, memoized_fib_sexp):
+        global_parse_and_eval(memoized_fib_sexp)
+        assert global_parse_and_eval('(memo-fib 50)') == 0
 
 
 class TestEnvironments(PylispTestCase):
@@ -206,6 +206,10 @@ class TestBuiltins(PylispTestCase):
     def test_two_arg_map(self):
         assert (global_parse_and_eval(
             "(map (lambda (x y) (* x y)) '(1 2 3) '(9 20 7))") == [9, 40, 21])
+
+    @pytest.mark.xfail
+    def test_progn(self):
+        assert global_parse_and_eval('(progn (+ 1 2) (+ 3 4) (+ 5 6))') == 11
 
 
 class TestHashTables(PylispTestCase):
