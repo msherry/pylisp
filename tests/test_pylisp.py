@@ -185,18 +185,6 @@ class TestBuiltins(PylispTestCase):
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
         assert global_parse_and_eval('(seq 5 10)') == [5, 6, 7, 8, 9]
 
-    def test_closure(self):
-        global_parse_and_eval('''(define closure_func
-                          (let ((x 10))
-                            (lambda (y) (^ x y))))''')
-        assert global_parse_and_eval('(closure_func 1)') == 10
-        assert global_parse_and_eval('(closure_func 2)') == 100
-        # External defines don't affect value of x inside closure
-        global_parse_and_eval('(define x 20)')
-        assert global_parse_and_eval('(closure_func 1)') == 10
-        assert global_parse_and_eval('(closure_func 2)') == 100
-        assert global_parse_and_eval('x') == 20
-
     def test_one_arg_map(self, fibonacci_sexp):
         global_parse_and_eval(fibonacci_sexp)
         assert (global_parse_and_eval(
@@ -210,6 +198,32 @@ class TestBuiltins(PylispTestCase):
     @pytest.mark.xfail
     def test_progn(self):
         assert global_parse_and_eval('(progn (+ 1 2) (+ 3 4) (+ 5 6))') == 11
+
+
+class TestClosures(PylispTestCase):
+    def test_closure_outer_define(self):
+        global_parse_and_eval('''(define closure_func
+                                   (let ((x 10))
+                                     (lambda (y) (^ x y))))''')
+        assert global_parse_and_eval('(closure_func 1)') == 10
+        assert global_parse_and_eval('(closure_func 2)') == 100
+        # External defines don't affect value of x inside closure
+        global_parse_and_eval('(define x 20)')
+        assert global_parse_and_eval('(closure_func 1)') == 10
+        assert global_parse_and_eval('(closure_func 2)') == 100
+        assert global_parse_and_eval('x') == 20
+
+    def test_closure_outer_let(self):
+        global_parse_and_eval('''(let ((x 10))
+                                   (define closure_func
+                                     (lambda (y) (^ x y))))''')
+        assert global_parse_and_eval('(closure_func 1)') == 10
+        assert global_parse_and_eval('(closure_func 2)') == 100
+        # External defines don't affect value of x inside closure
+        global_parse_and_eval('(define x 20)')
+        assert global_parse_and_eval('(closure_func 1)') == 10
+        assert global_parse_and_eval('(closure_func 2)') == 100
+        assert global_parse_and_eval('x') == 20
 
 
 class TestHashTables(PylispTestCase):
