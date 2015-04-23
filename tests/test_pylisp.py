@@ -202,19 +202,7 @@ class TestBuiltins(PylispTestCase):
 
 
 class TestClosures(PylispTestCase):
-    def test_closure_outer_define(self):
-        global_parse_and_eval('''(define closure_func
-                                   (let ((x 10))
-                                     (lambda (y) (^ x y))))''')
-        assert global_parse_and_eval('(closure_func 1)') == 10
-        assert global_parse_and_eval('(closure_func 2)') == 100
-        # External defines don't affect value of x inside closure
-        global_parse_and_eval('(define x 20)')
-        assert global_parse_and_eval('(closure_func 1)') == 10
-        assert global_parse_and_eval('(closure_func 2)') == 100
-        assert global_parse_and_eval('x') == 20
-
-    def test_closure_outer_let(self):
+    def test_closure_let_over_define(self):
         # This works in CLisp, and afaict is necessary for memoized_fib_sexp to
         # work without a y combinator
         global_parse_and_eval('''(let ((x 10))
