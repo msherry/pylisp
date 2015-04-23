@@ -19,6 +19,10 @@ class TestTokenize(PylispTestCase):
     def test_tokenize_fibonacci(self, fibonacci_sexp):
         assert len(tokenize(fibonacci_sexp)) == 38
 
+    @pytest.mark.xfail
+    def test_tokenize_string(self):
+        assert len(tokenize('"This is a single string"')) == 1
+
 
 class TestParse(PylispTestCase):
     def test_parse_addition(self, addition_sexp):
@@ -36,6 +40,16 @@ class TestParse(PylispTestCase):
     def test_parse_too_many_close(self):
         with pytest.raises(SyntaxError):
             parse('())')
+
+    @pytest.mark.xfail
+    def test_parse_string(self):
+        parsed = parse(tokenize('"aString"'))
+        assert isinstance(parsed, str)
+
+    @pytest.mark.xfail
+    def test_parse_symbol(self):
+        parsed = parse(tokenize('"aSymbol"'))
+        assert isinstance(parsed, Symbol)
 
 
 class TestEval(PylispTestCase):
@@ -203,7 +217,7 @@ class TestHashTables(PylispTestCase):
         global_parse_and_eval('(define table (make-hash-table))')
         assert global_parse_and_eval('(gethash "one" table)') == None
 
-    def test_set(self):
+    def test_set_string_keys(self):
         global_parse_and_eval('(define table (make-hash-table))')
         assert global_parse_and_eval('(gethash "one" table)') == None
         global_parse_and_eval('(set (gethash "one" table) 8)')
