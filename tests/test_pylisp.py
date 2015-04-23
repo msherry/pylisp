@@ -222,3 +222,9 @@ class TestHashTables(PylispTestCase):
         assert global_parse_and_eval('(gethash "one" table)') == None
         global_parse_and_eval('(set (gethash "one" table) 8)')
         assert global_parse_and_eval('(gethash "one" table)') == 8
+
+    def test_set_int_keys(self):
+        global_parse_and_eval('(define table (make-hash-table))')
+        assert global_parse_and_eval('(gethash 1 table)') == None
+        global_parse_and_eval('(set (gethash 1 table) 8)')
+        assert global_parse_and_eval('(gethash 1 table)') == 8

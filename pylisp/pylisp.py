@@ -94,9 +94,11 @@ def l_eval(expr, env):
         return expr
     elif expr[0] == 'gethash':
         key, table = expr[1], l_eval(expr[2], env)
-        if not isinstance(key, Symbol):
+        if isinstance(key, Symbol):
+            key = key.value
+        else:
             key = l_eval(key, env)
-        return table.get(key.value)
+        return table.get(key)
     elif expr[0] == 'lambda':
         arglist = expr[1]
         body = expr[2]
@@ -115,9 +117,11 @@ def l_eval(expr, env):
         if isinstance(place, list) and place[0] in ['gethash']:
             if place[0] == 'gethash':
                 key, table = place[1], l_eval(place[2], env)
-                if not isinstance(key, Symbol):
+                if isinstance(key, Symbol):
+                    key = key.value
+                else:
                     key = l_eval(key, env)
-                table[key.value] = val
+                table[key] = val
         else:
             # Must be a Symbol
             sym = l_eval(expr[1], env)
