@@ -36,17 +36,6 @@ class Symbol(object):
         return self.value == v
 
 
-class Place(object):
-    def __init__(self, type_, var, accessor):
-        self.type = type_
-        self.var = var
-        self.accessor = accessor
-
-    def eval(self):
-        if self.type == 'hashtable':
-            return self.var.get(self.accessor)
-
-
 def atom(x):
     try:
         return int(x)
@@ -101,15 +90,13 @@ def l_eval(expr, env):
     if isinstance(expr, Symbol):
         _, val = env.lookup(expr.value)
         return val
-    elif isinstance(expr, Place):
-        return expr.eval()
     elif not isinstance(expr, list):
         return expr
     elif expr[0] == 'gethash':
         key, table = expr[1], l_eval(expr[2], env)
         if not isinstance(key, Symbol):
             key = l_eval(key, env)
-        return Place('hashtable', table, key)
+        return table.get(key.value)
     elif expr[0] == 'lambda':
         arglist = expr[1]
         body = expr[2]
@@ -122,14 +109,24 @@ def l_eval(expr, env):
         env[sym.value] = val
         return sym
     elif expr[0] == 'set':
-        sym = l_eval(expr[1], env)
-        if not isinstance(sym, Symbol):
-            raise TypeError('{} is not a Symbol'.format(sym))
-        if sym.value not in env:
-            raise ValueError('{} not found in environment'.format(sym))
+        # Apparently the Lisp way is to hack a bunch of special cases in here
+        place = expr[1]
         val = l_eval(expr[2], env)
-        env[sym.value] = val
-        return sym
+        if isinstance(place, list) and place[0] in ['gethash']:
+            if place[0] == 'gethash':
+                key, table = place[1], l_eval(place[2], env)
+                if not isinstance(key, Symbol):
+                    key = l_eval(key, env)
+                table[key.value] = val
+        else:
+            # Must be a Symbol
+            sym = l_eval(expr[1], env)
+            if not isinstance(sym, Symbol):
+                raise TypeError('{} is not a Symbol'.format(sym))
+            if sym.value not in env:
+                raise ValueError('{} not found in environment'.format(sym))
+            env[sym.value] = val
+        return val
     elif expr[0] == 'if':
         try:
             _, cond, true_expr, false_expr = expr
