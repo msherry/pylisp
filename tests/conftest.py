@@ -45,7 +45,7 @@ def memoized_fib_sexp():
                     (gethash x memo)
                     (set (gethash x memo)
                       (if (< x 2) x
-                        (+ (memo-fib (- x 1)) (fib (- x 2)))))))))'''
+                        (+ (memo-fib (- x 1)) (memo-fib (- x 2)))))))))'''
 
 
 def memoize_sexp():
