@@ -95,7 +95,11 @@ def l_eval(expr, env):
     elif expr[0] == 'gethash':
         key, table = expr[1], l_eval(expr[2], env)
         if isinstance(key, Symbol):
-            key = key.value
+            # HACK: until we have strings, fake it here
+            if (key.value[0], key.value[-1]) == ('"', '"'):
+                key = key.value
+            else:
+                key = l_eval(key, env)
         else:
             key = l_eval(key, env)
         return table.get(key)
