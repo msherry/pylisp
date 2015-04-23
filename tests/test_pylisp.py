@@ -214,8 +214,9 @@ class TestClosures(PylispTestCase):
         assert global_parse_and_eval('x') == 20
 
     def test_closure_outer_let(self):
-        global_parse_and_eval('''(let ((x 10))
-                                   (define closure_func
+        # Let over lambda
+        global_parse_and_eval('''(define closure_func
+                                   (let ((x 10))
                                      (lambda (y) (^ x y))))''')
         assert global_parse_and_eval('(closure_func 1)') == 10
         assert global_parse_and_eval('(closure_func 2)') == 100

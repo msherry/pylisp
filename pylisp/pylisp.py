@@ -169,11 +169,14 @@ def l_eval(expr, env):
         return result
     elif expr[0] == 'let':
         let_forms = expr[1]
+        # TODO: let is an implicit progn, there can be multiple body forms, not
+        # just one
         body = expr[2] if len(expr) > 2 else None
         new_env = Environment(parent=env)
         for form in let_forms:
             new_env[form[0].value] = l_eval(form[1], env)
-        return l_eval(body, new_env)
+        ret = l_eval(body, new_env)
+        return ret
     elif expr[0] == 'map':
         # TODO: probably non-conforming, can we implement this in lisp?
         proc = l_eval(expr[1], env)
