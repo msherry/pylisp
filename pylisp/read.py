@@ -13,9 +13,9 @@ def atom(x):
 
 
 def tokenize(chars):
-    special = "()'"
+    special = '()"\''
     for s in special:
-        chars = chars.replace(s, " {} ".format(s))
+        chars = chars.replace(s, ' {} '.format(s))
     return chars.split()
 
 
@@ -32,7 +32,14 @@ def read_from_tokens(tokens, level=0):
     if t == "'":
         quote = True
         t = tokens.pop(0)
-    if t == '(':
+    if t == '"':
+        L = []
+        while tokens[0] != '"':
+            L.append(tokens.pop(0))
+        # Pop off final '"'
+        tokens.pop(0)
+        ret = ' '.join(L)
+    elif t == '(':
         L = []
         while tokens[0] != ')':
             L.append(read_from_tokens(tokens, level=level + 1))

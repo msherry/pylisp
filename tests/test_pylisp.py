@@ -19,9 +19,8 @@ class TestTokenize(PylispTestCase):
     def test_tokenize_fibonacci(self, fibonacci_sexp):
         assert len(tokenize(fibonacci_sexp)) == 38
 
-    @pytest.mark.xfail
     def test_tokenize_string(self):
-        assert len(tokenize('"This is a single string"')) == 1
+        assert len(tokenize('"This is a single string"')) == 7
 
 
 class TestParse(PylispTestCase):
@@ -41,14 +40,12 @@ class TestParse(PylispTestCase):
         with pytest.raises(SyntaxError):
             parse('())')
 
-    @pytest.mark.xfail
     def test_parse_string(self):
-        parsed = parse(tokenize('"aString"'))
-        assert isinstance(parsed, str)
+        parsed = parse('"aString"')
+        assert isinstance(parsed, basestring)
 
-    @pytest.mark.xfail
     def test_parse_symbol(self):
-        parsed = parse(tokenize('"aSymbol"'))
+        parsed = parse('aSymbol')
         assert isinstance(parsed, Symbol)
 
 
