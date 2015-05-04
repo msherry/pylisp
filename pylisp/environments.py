@@ -42,6 +42,11 @@ class Environment(dict):
             return self.parent.lookup(s)
         raise ValueError('Symbol "{}" not found'.format(s))
 
+    def eval_self(self, expr):
+        if isinstance(expr, Symbol):
+            return self.eval_symbol(expr)
+        return expr
+
     def eval_symbol(self, expr):
         _, val = self.lookup(expr.value)
         return val
@@ -190,8 +195,8 @@ class Environment(dict):
         return ret
 
     def eval(self, expr):
-        if isinstance(expr, Symbol):
-            return self.eval_symbol(expr)
+        if not isinstance(expr, list):
+            return self.eval_self(expr)
         elif not isinstance(expr, list):
             return expr
         elif expr[0] == 'quote':
