@@ -136,6 +136,13 @@ class Environment(dict):
                 return result
         return result
 
+    def eval_progn(self, expr):
+        body_forms = expr[1:] if len(expr) > 1 else []
+        ret = None
+        for body in body_forms:
+            ret = self.eval(body)
+        return ret
+
     def eval_let(self, expr):
         let_forms = expr[1]
         body_forms = expr[2:] if len(expr) > 2 else []
@@ -145,7 +152,6 @@ class Environment(dict):
 
         ret = None
         for body in body_forms:
-            # TODO: reuse this for progn?
             ret = new_env.eval(body)
             if isinstance(ret, Procedure):
                 # Pull the procedure out of the env belonging to `let` and
@@ -206,6 +212,8 @@ class Environment(dict):
             return self.eval_and(expr)
         elif expr[0] == 'or':
             return self.eval_or(expr)
+        elif expr[0] == 'progn':
+            return self.eval_progn(expr)
         elif expr[0] == 'let':
             return self.eval_let(expr)
         elif expr[0] == 'map':

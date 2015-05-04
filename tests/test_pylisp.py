@@ -196,15 +196,21 @@ class TestBuiltins(PylispTestCase):
         global_parse_and_eval(fibonacci_sexp)
         assert (global_parse_and_eval(
             "(map fib2 '(0 1 2 3 4 5 6 7 8 9 10))") ==
-            [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
+                [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55])
 
     def test_two_arg_map(self):
         assert (global_parse_and_eval(
             "(map (lambda (x y) (* x y)) '(1 2 3) '(9 20 7))") == [9, 40, 21])
 
-    @pytest.mark.xfail
     def test_progn(self):
         assert global_parse_and_eval('(progn (+ 1 2) (+ 3 4) (+ 5 6))') == 11
+
+    def test_fn_defined_in_progn_assigned_to_env(self):
+        global_parse_and_eval('''(progn
+                                   (define func (lambda (x)
+                                     (^ x 2))))''')
+        assert global_parse_and_eval('(func 1)') == 1
+        assert global_parse_and_eval('(func 2)') == 4
 
 
 class TestClosures(PylispTestCase):
