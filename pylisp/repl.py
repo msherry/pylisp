@@ -19,6 +19,8 @@ def global_parse_and_eval(expr):
 
 
 def read_loop():
+    from environments import global_env
+    from read import parse
     try:
         readline.read_history_file('.pylisp_history')
     except IOError:
@@ -44,7 +46,7 @@ def read_loop():
                 try:
                     expr = ' '.join(complete_expr)
                     complete_expr = []
-                    ret = global_parse_and_eval(expr)
+                    ret = global_env.eval(parse(expr))
                 except Exception, e:                    # pylint: disable=W0703
                     print 'Error: {}'.format(e)
                     continue
