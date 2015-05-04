@@ -139,26 +139,28 @@ class Environment(dict):
 
     def eval_let(self, expr):
         let_forms = expr[1]
-        # TODO: let is an implicit progn, there can be multiple body forms, not
-        # just one
-        body = expr[2] if len(expr) > 2 else None
+        body_forms = expr[2:] if len(expr) > 2 else []
         new_env = Environment(parent=self)
         for form in let_forms:
             new_env[form[0].value] = self.eval(form[1])
-        ret = new_env.eval(body)
-        if isinstance(ret, Procedure):
-            # Pull the procedure out of the env belonging to `let` and place it
-            # in this one, so we can still access it once the let form is
-            # exited.
-            # TODO: this seems really dirty -- would love to know the right way
-            # to do it.
-            # TODO: SICP 5.2.5 has the right way to do this -- use that.
-            procedure_to_name = {v: k for k, v in ret.parent_env.iteritems()
-                                 if isinstance(v, Procedure)}
-            if ret in procedure_to_name:
-                name = procedure_to_name[ret]
-                ret.parent_env.pop(name)
-                self[name] = ret
+
+        ret = None
+        for body in body_forms:
+            # TODO: reuse this for progn?
+            ret = new_env.eval(body)
+            if isinstance(ret, Procedure):
+                # Pull the procedure out of the env belonging to `let` and
+                # place it in this one, so we can still access it once the let
+                # form is exited.
+                # TODO: this seems really dirty -- would love to know the right
+                # way to do it.
+                # TODO: SICP 5.2.5 has the right way to do this -- use that.
+                procedure_to_name = {v: k for k, v in ret.parent_env.iteritems()
+                                     if isinstance(v, Procedure)}
+                if ret in procedure_to_name:
+                    name = procedure_to_name[ret]
+                    ret.parent_env.pop(name)
+                    self[name] = ret
         return ret
 
     def eval_map(self, expr):

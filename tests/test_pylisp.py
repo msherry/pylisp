@@ -181,6 +181,12 @@ class TestBuiltins(PylispTestCase):
     def test_let_no_assignments(self):
         assert global_parse_and_eval('(let () 7)') == 7
 
+    def test_let_multiple_body_forms(self):
+        assert global_parse_and_eval('''(let ((x 7))
+                                           (+ x 2)
+                                           (* x 2)
+                                           (- x 2))''') == 5
+
     def test_seq(self):
         assert (global_parse_and_eval('(seq 10)') ==
                 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
