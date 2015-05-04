@@ -13,9 +13,9 @@ readline.parse_and_bind('set editing-mode emacs')
 
 def global_parse_and_eval(expr):
     from environments import global_env
-    from pylisp import l_eval, parse
+    from read import parse
 
-    return l_eval(parse(expr), global_env)
+    return global_env.eval(parse(expr))
 
 
 def read_loop():
