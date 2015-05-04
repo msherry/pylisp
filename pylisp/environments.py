@@ -152,6 +152,7 @@ class Environment(dict):
             # exited.
             # TODO: this seems really dirty -- would love to know the right way
             # to do it.
+            # TODO: SICP 5.2.5 has the right way to do this -- use that.
             procedure_to_name = {v: k for k, v in ret.parent_env.iteritems()
                                  if isinstance(v, Procedure)}
             if ret in procedure_to_name:
