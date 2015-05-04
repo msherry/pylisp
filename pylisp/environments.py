@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 
-import math
 import operator as op
 from pylisp import Procedure
 from read import parse
