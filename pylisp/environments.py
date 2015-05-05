@@ -57,11 +57,7 @@ class Environment(dict):
     def eval_gethash(self, expr):
         key, table = expr[1], self.eval(expr[2])
         if isinstance(key, Symbol):
-            # HACK: until we have strings, fake it here
-            if (key.value[0], key.value[-1]) == ('"', '"'):
-                key = key.value
-            else:
-                key = self.eval(key)
+            key = self.eval(key)
         else:
             key = self.eval(key)
         return table.get(key)
@@ -87,11 +83,7 @@ class Environment(dict):
             if place[0] == 'gethash':
                 key, table = place[1], self.eval(place[2])
                 if isinstance(key, Symbol):
-                    # HACK: until we have strings, fake it here
-                    if (key.value[0], key.value[-1]) == ('"', '"'):
-                        key = key.value
-                    else:
-                        key = self.eval(key)
+                    key = self.eval(key)
                 else:
                     key = self.eval(key)
                 table[key] = val

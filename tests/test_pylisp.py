@@ -91,6 +91,11 @@ class TestEval(PylispTestCase):
         assert global_parse_and_eval('(memo-fib 50)') == 12586269025
 
 
+class TestStrings(PylispTestCase):
+    def test_multiple(self):
+        assert global_parse_and_eval('\'("aaa" "bbb")') == ['aaa', 'bbb']
+
+
 class TestEnvironments(PylispTestCase):
     def test_std_procs(self):
         assert global_parse_and_eval('(fact 6)') == 720
