@@ -22,6 +22,12 @@ class TestTokenize(PylispTestCase):
     def test_tokenize_string(self):
         assert len(tokenize('"This is a single string"')) == 7
 
+    def test_tokenize_backquote(self):
+        pass
+
+    def test_tokenize_comma_in_macro(self):
+        pass
+
 
 class TestParse(PylispTestCase):
     def test_parse_addition(self, addition_sexp):
@@ -95,11 +101,21 @@ class TestStrings(PylispTestCase):
     def test_multiple(self):
         assert global_parse_and_eval('\'("aaa" "bbb")') == ['aaa', 'bbb']
 
+    def test_set_get_variable(self):
+        global_parse_and_eval('(define x "dog")')
+        assert global_parse_and_eval('x') == 'dog'
+
 
 class TestEnvironments(PylispTestCase):
     def test_std_procs(self):
         assert global_parse_and_eval('(fact 6)') == 720
         assert global_parse_and_eval('(fib 6)') == 8
+
+    def test_mutually_recursive_defuns(self):
+        pass
+
+    def test_mutually_recursive_defuns_under_let(self):
+        pass
 
 
 class TestBuiltins(PylispTestCase):
@@ -269,3 +285,11 @@ class TestHashTables(PylispTestCase):
         assert global_parse_and_eval('(gethash 1 table)') == None
         global_parse_and_eval('(set (gethash 1 table) 8)')
         assert global_parse_and_eval('(gethash 1 table)') == 8
+
+
+def TestMacros(PylispTestCase):
+    def test_macro_expansion(self):
+        pass
+
+    def test_gensyms(self):
+        pass

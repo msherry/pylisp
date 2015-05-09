@@ -34,7 +34,7 @@ def fibonacci_sexp():
     # fib is a default proc, so we define an identical fib2
     return '''(define fib2 (lambda (x)
                 (if (< x 2) x
-                   (+ (fib2 (- x 1)) (fib2 (- x 2))))))'''
+                  (+ (fib2 (- x 1)) (fib2 (- x 2))))))'''
 
 
 @pytest.fixture
@@ -50,7 +50,15 @@ def memoized_fib_sexp():
 
 def memoize_sexp():
     return """(defmacro memoize (func)
-                '(lambda (x)
-                  (let (( memo (make-hash-table)))
-                     (if (gethash x 'memo) (gethash x 'memo)
-                       (setf (gethash x 'memo) (func x))))))) """
+                `(let ((memo (make-hash-table)))
+                   (if (gethash x 'memo) (gethash x 'memo)
+                     (setf (gethash x 'memo) ,(func x)))))))"""
+
+pass
+
+'''
+(memoize
+  (define fib (lambda (x)
+    (if (< x 2) x
+      (+ (fib (- x 1)) (fib (- x 2)))))))
+'''
