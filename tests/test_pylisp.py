@@ -113,13 +113,26 @@ class TestEnvironments(PylispTestCase):
         assert global_parse_and_eval('(fact 6)') == 720
         assert global_parse_and_eval('(fib 6)') == 8
 
-    @pytest.mark.xfail
     def test_mutually_recursive_defuns(self):
-        pass
+        global_parse_and_eval('''(define a (lambda (x)
+                                     (if (<= x 0) 0
+                                       (+ 1 (b (- x 1))))))''')
+        global_parse_and_eval('''(define b (lambda (x)
+                                     (if (<= x 0) 0
+                                       (+ 1 (a (- x 1))))))''')
+        assert global_parse_and_eval('(a 10)') == 10
+        assert global_parse_and_eval('(b 10)') == 10
 
-    @pytest.mark.xfail
     def test_mutually_recursive_defuns_under_let(self):
-        pass
+        global_parse_and_eval('''(let ((g 6))
+                                   (define a (lambda (x)
+                                       (if (<= x 0) 0
+                                         (+ 1 (b (- x 1))))))
+                                   (define b (lambda (x)
+                                       (if (<= x 0) 0
+                                         (+ 1 (a (- x 1)))))))''')
+        assert global_parse_and_eval('(a 10)') == 10
+        assert global_parse_and_eval('(b 10)') == 10
 
 
 class TestBuiltins(PylispTestCase):
