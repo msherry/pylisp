@@ -93,7 +93,7 @@ class TestEval(PylispTestCase):
         assert global_parse_and_eval('(fib2 4)') == 3
         assert global_parse_and_eval('(fib2 5)') == 5
 
-    @pytest.mark.timeout(2)
+    @pytest.mark.timeout(1)
     def test_memoized_fibonacci(self, memoized_fib_sexp):
         global_parse_and_eval(memoized_fib_sexp)
         assert global_parse_and_eval('(memo-fib 50)') == 12586269025
@@ -106,6 +106,7 @@ class TestStrings(PylispTestCase):
     def test_set_get_variable(self):
         global_parse_and_eval('(define x "dog")')
         assert global_parse_and_eval('x') == 'dog'
+        assert global_parse_and_eval('"x"') == 'x'
 
 
 class TestEnvironments(PylispTestCase):
@@ -202,6 +203,19 @@ class TestBuiltins(PylispTestCase):
         assert global_parse_and_eval('(condfun 14)') == 2
         assert global_parse_and_eval('(condfun 21)') == 3
         assert global_parse_and_eval('(condfun 10)') == 7
+
+    @pytest.mark.xfail
+    # TODO: should cond have an implicit progn or no?
+    def test_cond_implicit_progn(self):
+        sexp = '''(define condfun (lambda (x)
+                    (cond ((< x 10)
+                             1
+                             1
+                             (* x 7))
+                          (True 7))))
+        '''
+        global_parse_and_eval(sexp)
+        assert global_parse_and_eval('(condfun 2)') == 14
 
     def test_let(self):
         global_parse_and_eval('(define x 10)')
