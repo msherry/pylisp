@@ -136,7 +136,7 @@ class TestEnvironments(PylispTestCase):
         assert global_parse_and_eval('(b 10)') == 10
 
 
-class TestBuiltins(PylispTestCase):
+class TestBuiltin(PylispTestCase):
     def test_and(self):
         assert global_parse_and_eval('(and)') == True
         assert global_parse_and_eval('(and True True)') == True
@@ -260,6 +260,16 @@ class TestBuiltins(PylispTestCase):
                                      (^ x 2))))''')
         assert global_parse_and_eval('(func 1)') == 1
         assert global_parse_and_eval('(func 2)') == 4
+
+
+class TestLispBuiltins(PylispTestCase):
+
+    def test_zero(self):
+        assert global_parse_and_eval('(zero? 0)') == True
+        assert global_parse_and_eval('(zero? 0.0)') == True
+        assert global_parse_and_eval('(zero? "0")') == None
+        assert global_parse_and_eval('(zero? 1)') == None
+        assert global_parse_and_eval('(zero? "%")') == None
 
 
 class TestClosures(PylispTestCase):

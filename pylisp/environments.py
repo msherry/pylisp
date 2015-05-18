@@ -14,6 +14,8 @@ std_procedures = {
     'fib': '''(lambda (x)
                 (if (< x 2) x
                   (+ (fib (- x 1)) (fib (- x 2)))))''',
+
+    'zero?': '''(lambda (x) (= x 0))'''
 }
 
 
