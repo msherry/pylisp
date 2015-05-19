@@ -272,6 +272,19 @@ class TestLispBuiltins(PylispTestCase):
         assert global_parse_and_eval('(zero? "%")') == None
 
 
+class TestScope(PylispTestCase):
+
+    def test_lexical_scope(self):
+        global_parse_and_eval('''
+        (define x
+          (lambda (x)
+            (map
+              (lambda (x)
+                (+ x 1))
+              x))) ''')
+        assert global_parse_and_eval("(x '(1 2 3))") == [2, 3, 4]
+
+
 class TestClosures(PylispTestCase):
     def test_closure_let_over_define(self):
         # This works in CLisp, and afaict is necessary for memoized_fib_sexp to
